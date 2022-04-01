@@ -44,29 +44,29 @@ services:
       - "15672:15672"
     networks:
       - spring
-  #  eureka-server:
-  #    image: milewsa3/eureka-server:latest
-  #    container_name: eureka-server
-  #    ports:
-  #      - "8761:8761"
-  #    networks:
-  #      - spring
-  #    depends_on:
-  #      - zipkin
-  #    environment:
-  #      - SPRING_PROFILES_ACTIVE=docker
-  #  apigw:
-  #    image: milewsa3/apigw:latest
-  #    container_name: apigw
-  #    ports:
-  #      - "8083:8083"
-  #    environment:
-  #      - SPRING_PROFILES_ACTIVE=docker
-  #    networks:
-  #      - spring
-  #    depends_on:
-  #      - zipkin
-  #      - eureka-server
+  eureka-server:
+    image: milewsa3/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - spring
+    depends_on:
+      - zipkin
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  apigw:
+    image: milewsa3/apigw:latest
+    container_name: apigw
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+    depends_on:
+      - zipkin
+      - eureka-server
   customer:
     image: milewsa3/customer:latest
     container_name: customer

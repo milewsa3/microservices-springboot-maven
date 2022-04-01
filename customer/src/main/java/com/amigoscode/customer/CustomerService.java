@@ -1,12 +1,12 @@
 package com.amigoscode.customer;
 
-import com.amigoscode.amqp.RabbitMQMessageProducer;
 import com.amigoscode.clients.fraud.FraudCheckResponse;
 import com.amigoscode.clients.fraud.FraudClient;
 import com.amigoscode.clients.notification.NotificationRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 class CustomerService {
     CustomerRepository customerRepository;
     FraudClient fraudClient;
-    RabbitMQMessageProducer rabbitMQMessageProducer;
+    KafkaTemplate<String, NotificationRequest> kafkaTemplate;
 
     void registerCustomer(CustomerRegistrationRequest request) {
         Customer customer = Customer.builder()
@@ -36,10 +36,6 @@ class CustomerService {
                 customer.getEmail(),
                 String.format("Hi %s, welcome to Amigoscode...", customer.getFirstName())
         );
-        rabbitMQMessageProducer.publish(
-                notificationRequest,
-                "internal.exchange",
-                "internal.notification.routing-key"
-        );
+        kafkaTemplate.send("amigoscode", notificationRequest);
     }
 }
