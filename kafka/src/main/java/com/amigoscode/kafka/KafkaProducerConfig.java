@@ -1,4 +1,4 @@
-package com.amigoscode.customer.kafka;
+package com.amigoscode.kafka;
 
 import com.amigoscode.clients.notification.NotificationRequest;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaProducerConfig {
+class KafkaProducerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;

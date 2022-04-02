@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Slf4j
-public class NotificationController {
+class NotificationController {
 
     NotificationService notificationService;
 

@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Service
-public class NotificationService {
+class NotificationService {
 
     NotificationRepository notificationRepository;
 
-    public void send(NotificationRequest notificationRequest) {
+    void send(NotificationRequest notificationRequest) {
         notificationRepository.save(
                 Notification.builder()
                         .toCustomerId(notificationRequest.toCustomerId())

@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Slf4j
-public class FraudController {
+class FraudController {
     FraudCheckService fraudCheckService;
 
     @GetMapping(path = "{customerId}")
-    public FraudCheckResponse isFraudster(@PathVariable("customerId") Integer customerId) {
+    FraudCheckResponse isFraudster(@PathVariable("customerId") Integer customerId) {
         boolean isFraudulentCustomer = fraudCheckService.isFraudulentCustomer(customerId);
         log.info("fraud check request for customer {}", customerId);
         return new FraudCheckResponse(isFraudulentCustomer);

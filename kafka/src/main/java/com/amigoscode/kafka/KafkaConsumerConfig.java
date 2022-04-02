@@ -1,4 +1,4 @@
-package com.amigoscode.notification;
+package com.amigoscode.kafka;
 
 import com.amigoscode.clients.notification.NotificationRequest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class NotificationConfig {
+class KafkaConsumerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
