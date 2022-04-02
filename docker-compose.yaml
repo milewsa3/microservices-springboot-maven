@@ -36,14 +36,6 @@ services:
       - "9411:9411"
     networks:
       - spring
-  rabbitmq:
-    image: rabbitmq:3.9.11-management-alpine
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    networks:
-      - spring
   eureka-server:
     image: milewsa3/eureka-server:latest
     container_name: eureka-server
@@ -67,6 +59,33 @@ services:
     depends_on:
       - zipkin
       - eureka-server
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - spring
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      # To learn about configuring Kafka for access across networks see
+      # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - spring
   customer:
     image: milewsa3/customer:latest
     container_name: customer
@@ -80,7 +99,7 @@ services:
     depends_on:
       - zipkin
       - postgres
-      - rabbitmq
+      - kafka
   fraud:
     image: milewsa3/fraud:latest
     container_name: fraud
@@ -94,7 +113,7 @@ services:
     depends_on:
       - zipkin
       - postgres
-      - rabbitmq
+      - kafka
   notification:
     image: milewsa3/notification:latest
     container_name: notification
@@ -108,8 +127,7 @@ services:
     depends_on:
       - zipkin
       - postgres
-      - rabbitmq
-
+      - kafka
 
 
 networks:
